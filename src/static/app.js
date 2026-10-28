@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const emailInput = document.getElementById("email");
   let activitiesAvailable = false;
   let messageTimeout;
+  const openPanels = new Set();
 
   async function fetchActivities() {
     activitiesList.setAttribute("aria-busy", "true");
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         activitiesList.append(createTextElement("p", "empty-state", "Nenhuma atividade disponível no momento."));
       }
 
-      entries.forEach(([name, details]) => {
+      entries.forEach(([name, details], index) => {
         const activityCard = document.createElement("article");
         activityCard.className = "activity-card";
 
@@ -41,6 +42,71 @@ document.addEventListener("DOMContentLoaded", () => {
         const description = createTextElement("p", "", details.description);
         const metadata = document.createElement("div");
         metadata.className = "activity-meta";
+        const participantsSection = document.createElement("section");
+        participantsSection.className = "participants-section";
+
+        const panelId = `participants-panel-${index}`;
+        const isOpen = openPanels.has(name);
+        participantsSection.classList.toggle("open", isOpen);
+
+        const toggleButton = document.createElement("button");
+        toggleButton.type = "button";
+        toggleButton.className = "participants-toggle";
+        toggleButton.setAttribute("aria-expanded", String(isOpen));
+        toggleButton.setAttribute("aria-controls", panelId);
+        toggleButton.append(
+          createTextElement("span", "", `Participantes (${details.participants.length})`),
+          createTextElement("span", "participants-chevron", "▾")
+        );
+        toggleButton.lastChild.setAttribute("aria-hidden", "true");
+
+        const participantsPanel = document.createElement("div");
+        participantsPanel.id = panelId;
+        participantsPanel.className = "participants-panel";
+        participantsPanel.setAttribute("role", "region");
+        participantsPanel.setAttribute("aria-label", `Participantes de ${name}`);
+        participantsPanel.inert = !isOpen;
+
+        toggleButton.addEventListener("click", () => {
+          const open = !participantsSection.classList.contains("open");
+          participantsSection.classList.toggle("open", open);
+          toggleButton.setAttribute("aria-expanded", String(open));
+          participantsPanel.inert = !open;
+          if (open) {
+            openPanels.add(name);
+          } else {
+            openPanels.delete(name);
+          }
+        });
+
+        const participantsList = document.createElement("ul");
+        participantsList.className = "participants-list";
+
+        if (details.participants.length === 0) {
+          participantsList.append(createTextElement("li", "participants-empty", "Seja a primeira pessoa a participar!"));
+        } else {
+          details.participants.forEach((participant) => {
+            const item = document.createElement("li");
+            item.className = "participant-item";
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "participant-delete";
+            deleteButton.setAttribute("aria-label", `Remover ${participant} de ${name}`);
+            deleteButton.title = "Remover participante";
+            deleteButton.innerHTML =
+              '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14M10 11v5M14 11v5"/></svg>';
+            deleteButton.addEventListener("click", () => unregisterParticipant(name, participant, deleteButton));
+
+            item.append(createTextElement("span", "participant-email", participant), deleteButton);
+            participantsList.append(item);
+          });
+        }
+        const panelInner = document.createElement("div");
+        panelInner.className = "participants-panel-inner";
+        panelInner.append(participantsList);
+        participantsPanel.append(panelInner);
+        participantsSection.append(toggleButton, participantsPanel);
 
         cardContent.append(title, description);
         metadata.append(
@@ -65,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("signup-container").scrollIntoView({ behavior: "smooth", block: "center" });
         });
 
-        activityCard.append(chooseButton, metadata);
+        activityCard.append(chooseButton, metadata, participantsSection);
         activitiesList.append(activityCard);
 
         const option = document.createElement("option");
@@ -130,6 +196,30 @@ document.addEventListener("DOMContentLoaded", () => {
       signupButton.disabled = !activitiesAvailable;
     }
   });
+
+  async function unregisterParticipant(activity, email, button) {
+    button.disabled = true;
+
+    try {
+      const response = await fetch(
+        `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
+        { method: "DELETE" }
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        showMessage(result.message, "success");
+        await fetchActivities();
+      } else {
+        button.disabled = false;
+        showMessage(result.detail || "Não foi possível remover o participante.", "error");
+      }
+    } catch (error) {
+      button.disabled = false;
+      showMessage("Não foi possível remover o participante. Tente novamente.", "error");
+      console.error("Erro ao remover participante:", error);
+    }
+  }
 
   function showMessage(message, type) {
     window.clearTimeout(messageTimeout);

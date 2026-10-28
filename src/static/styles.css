@@ -354,6 +354,123 @@ main,
   color: #9c4a32;
 }
 
+.participants-section {
+  grid-column: 1 / -1;
+  border: 1px solid #e8eee4;
+  border-radius: 10px;
+  background: #f8faf6;
+}
+
+.participants-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #35443a;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.participants-toggle:hover {
+  background: #f0f5ec;
+}
+
+.participants-chevron {
+  color: var(--green);
+  font-size: 13px;
+  transition: transform 300ms ease;
+}
+
+.participants-section.open .participants-chevron {
+  transform: rotate(180deg);
+}
+
+.participants-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 300ms ease, opacity 250ms ease;
+}
+
+.participants-section.open .participants-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.participants-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.participants-panel-inner .participants-list {
+  padding: 2px 13px 13px;
+}
+
+.participants-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr));
+  gap: 5px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.participants-list li {
+  min-width: 0;
+  color: #58655c;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 4px 3px 9px;
+  border-radius: 8px;
+  background: var(--white);
+  border: 1px solid #eaefe6;
+}
+
+.participant-delete {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #9aa59d;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.participant-delete:hover:not(:disabled),
+.participant-delete:focus-visible {
+  background: #fff0eb;
+  color: #b4412a;
+}
+
+.participant-delete:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.participants-list .participants-empty {
+  color: #7a867d;
+  font-style: italic;
+}
+
 .activity-action {
   align-self: start;
   padding: 7px 10px;
