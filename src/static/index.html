@@ -3,46 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Atividades da Mergington High School</title>
+    <meta
+      name="description"
+      content="Descubra atividades extracurriculares e encontre seu próximo clube na Mergington High School."
+    />
+    <meta name="theme-color" content="#f5f7f2" />
+    <title>Atividades extracurriculares | Mergington High School</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Mergington High School</h1>
-      <h2>Atividades Extracurriculares</h2>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Mergington High School, início">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span class="brand-name">Mergington <span>High School</span></span>
+      </a>
+      <span class="header-label">Vida no campus</span>
     </header>
 
     <main>
-      <section id="activities-container">
-        <h3>Atividades Disponíveis</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Carregando atividades...</p>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span aria-hidden="true"></span> Encontre o seu lugar</p>
+          <h1 id="page-title">Mais do que aulas.<br /><span>Uma paixão para descobrir.</span></h1>
+          <p class="hero-description">
+            Explore atividades, conheça pessoas e faça parte de algo que você ama.
+          </p>
+          <a class="hero-link" href="#activities-container">
+            Explorar atividades <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-sparkle sparkle-one">✳</div>
+          <div class="art-sparkle sparkle-two">✦</div>
+          <div class="art-note">
+            <span class="note-icon">✳</span>
+            <span>Seu próximo<br />capítulo começa aqui.</span>
+          </div>
+          <div class="art-sticker">EXPLORE<br />&amp; CRESÇA</div>
         </div>
       </section>
 
-      <section id="signup-container">
-        <h3>Inscreva-se em uma Atividade</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">E-mail do Estudante:</label>
-            <input type="email" id="email" required placeholder="seu-email@mergington.edu" />
+      <div class="content-grid">
+        <section id="activities-container" class="activities-section" aria-labelledby="activities-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Descubra o que combina com você</p>
+              <h2 id="activities-title">Atividades disponíveis</h2>
+            </div>
+            <span class="section-mark" aria-hidden="true">✳</span>
           </div>
-          <div class="form-group">
-            <label for="activity">Selecione a Atividade:</label>
-            <select id="activity" required>
-              <option value="">-- Selecione uma atividade --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
+
+          <div id="activities-list" class="activities-list" aria-live="polite" aria-busy="true">
+            <p class="loading-state">Carregando atividades...</p>
           </div>
-          <button type="submit">Inscrever-se</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
+        </section>
+
+        <aside id="signup-container" class="signup-panel" aria-labelledby="signup-title">
+          <div class="signup-icon" aria-hidden="true">↗</div>
+          <p class="eyebrow">Dê o primeiro passo</p>
+          <h2 id="signup-title">Pronto para participar?</h2>
+          <p class="signup-intro">Escolha uma atividade e faça sua inscrição. É rápido e fácil.</p>
+
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="email">Seu e-mail escolar</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+                placeholder="voce@mergington.edu"
+              />
+            </div>
+            <div class="form-group">
+              <label for="activity">Atividade</label>
+              <select id="activity" name="activity" required>
+                <option value="">Selecione uma atividade</option>
+              </select>
+            </div>
+            <button type="submit" id="signup-button" disabled>
+              <span>Fazer inscrição</span><span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p class="form-note"><span aria-hidden="true">✓</span> Inscrição gratuita para estudantes</p>
+          <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+        </aside>
+      </div>
     </main>
 
-    <footer>
-      <p>&copy; 2025 Mergington High School</p>
+    <footer class="site-footer">
+      <span class="footer-brand">Mergington High School</span>
+      <p>Aprenda. Explore. Faça acontecer.</p>
+      <span>&copy; 2025 Mergington High School</span>
     </footer>
 
     <script src="app.js"></script>
